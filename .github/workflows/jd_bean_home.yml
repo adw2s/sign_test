@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: jd_baen_home
+name: jd_bean_home
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
   watch:
     types: started
   repository_dispatch:
-    types: fruit
+    types: jd_bean_home
 jobs:
   build:
 
@@ -35,20 +35,18 @@ jobs:
       - name: npm install
         run: |
           npm install
-      - name: '运行 【领京豆额外奖励(每日可获得3京豆)】'
+      - name: '运行 【领京豆额外奖励】'
         run: |
-          node jd_baen_home.js
+          node jd_bean_home.js
         env:
           JD_COOKIE: ${{ secrets.JD_COOKIE }}
           JD_DEBUG: ${{ secrets.JD_DEBUG }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           BARK_PUSH: ${{ secrets.BARK_PUSH }}
-          FRUITSHARECODES: ${{ secrets.FRUITSHARECODES }}
-          FRUIT_BEAN_CARD: ${{ secrets.FRUIT_BEAN_CARD }}
+          BARK_SOUND: ${{ secrets.BARK_SOUND }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_USER_ID: ${{ secrets.TG_USER_ID }}
-          FRUIT_NOTIFY_CONTROL: ${{ secrets.FRUIT_NOTIFY_CONTROL }}
-          BARK_SOUND: ${{ secrets.BARK_SOUND }}
           DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN }}
           DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET }}
           IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY }}
+          JD_818_SHAREID_NOTIFY: ${{ secrets.JD_818_SHAREID_NOTIFY }}

@@ -10,7 +10,7 @@ on:
   watch:
     types: [started]
   repository_dispatch:
-    types: jd_new_shop_kyle
+    types: new_shop_kyle
 jobs:
   build:
 
