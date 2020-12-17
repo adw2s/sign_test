@@ -1,0 +1,11 @@
+Cron 表达式语法一（推荐）
+Cron 表达式有七个必需字段，按空格分隔。
+
+第一位	第二位	第三位	第四位	第五位	第六位	第七位
+秒	    分钟	小时	日	    月	   星期	  年
+
+第一位	第二位	第三位	第四位	第五位
+分钟	小时	日	    月	   星期
+
+https://www.bejson.com/othertools/cronvalidate/
+https://cloud.tencent.com/document/product/583/9708#cron-.E8.A1.A8.E8.BE.BE.E5.BC.8F
