@@ -22,7 +22,6 @@ crazyJoy挂机 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301
 
  */
 
-
 const $ = new Env('crazyJoy挂机');
 const JD_API_HOST = 'https://api.m.jd.com/';
 
@@ -165,7 +164,8 @@ if ($.isNode()) {
     return;
   }
   let count = 0
-  while (true) {
+  let maxCount = process.env.JDJOY_MAXCOUNT || 30
+  while (count <= maxCount) {
     count++
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
