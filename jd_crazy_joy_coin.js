@@ -166,6 +166,7 @@ if ($.isNode()) {
   }
   let count = 0
   let maxCount = process.env.JDJOY_MAXCOUNT || 30
+  cookiesArr = [cookiesArr[0]]
   while (count <= maxCount) {
     count++
     console.log(`============开始第${count}次挂机=============`)
