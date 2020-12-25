@@ -28,6 +28,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+var maxCount = 30;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -165,9 +166,8 @@ if ($.isNode()) {
     return;
   }
   let count = 0
-  let maxCount = process.env.JDJOY_MAXCOUNT || 30
   cookiesArr = [cookiesArr[0]]
-  while (count <= maxCount) {
+  while (maxCount > 0) {
     count++
     console.log(`============开始第${count}次挂机=============`)
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -443,6 +443,9 @@ function openBox(eventType = 'LUCKY_BOX_DROP', boxId) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data['success']) {
+                if (maxCount > data.data.advertViewTimes) {
+                    maxCount = data.data.advertViewTimes
+                }
               $.log(`点击幸运盒子成功，剩余观看视频次数：${data.data.advertViewTimes}, ${data.data.advertViewTimes > 0 ? '等待30秒' : '跳出'}`)
               if (data.data.advertViewTimes > 0) {
                 await $.wait(30000)
