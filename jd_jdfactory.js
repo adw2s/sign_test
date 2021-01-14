@@ -28,6 +28,14 @@ cron "10 * * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scrip
 ============小火箭=========
 东东工厂 = type=cron,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdfactory.js, cronexpr="10 * * * *", timeout=200, enable=true
  */
+
+// pt_key=AAJf03ktADBH7QQzLiAd-OAp27mToboU5nqTFI4tvDkWS2GzpHcwZyVVrz2bZItC44m441Q4Izk;pt_pin=qq6938667;
+// &pt_key=AAJf5VCVADDlQ-YLY3HtsluZ3xGllEmYz5k5s6vlBHG6XTI2BPlVIfGtaFejo19PvpB9NkIR7KI;pt_pin=jd_4cf14bc183179;
+// &pt_key=AAJf99fkADDE939MkS4-okf7UTPSt9OFbKV5A9zEGLNYM2i9s61z3qrfywkBZNSgj14pf8nkTuw;pt_pin=1014376181_m;
+// &pt_key=AAJf-BslADC4zelGvwJpE0yDcS-jWnfpvWydn29KP1X1dNmECr924UIbGS_8_TOGmuBA9B34-nU;pt_pin=673918477_m;
+// &pt_key=AAJf7nuCADDAnJNzl4xtdAxGAizQjY5Bq6v1LIRuJ1IDv7q5TzUEV8uNwzLevCgR8qbo3Yn6wt4;pt_pin=jd_43969b7dc6c54;
+
+
 const $ = new Env('东东工厂');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -233,6 +241,7 @@ async function algorithm() {
                     }
                   } else {
                     console.log(`异常：${JSON.stringify(data)}`)
+                    console.log(` canMakeList = ：${JSON.stringify($.canMakeList)}`)
                   }
                 }
               }
@@ -540,6 +549,7 @@ function jdfactory_getProductList(flag = false) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
+            console.log(`data = ${JSON.stringify(data)}`)
             if (data.data.bizCode === 0) {
               $.canMakeList = [];
               $.canMakeList = data.data.result.skuIdList;//当前可选商品列表 sellOut:1为已抢光，0为目前可选择
