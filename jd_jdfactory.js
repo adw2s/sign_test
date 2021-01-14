@@ -147,7 +147,7 @@ async function algorithm() {
                 message += `当前完成度：${((remainScore * 1 + useScore * 1)/(totalScore * 1)).toFixed(2) * 100}%\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
-                  await configProductList(data,true);
+                  await jdfactory_getProductList(true);
                   let wantProductSkuId = '';
                   for (let item of $.canMakeList) {
                     if (item.name.indexOf(wantProduct) > - 1) {
@@ -188,7 +188,7 @@ async function algorithm() {
                 message += `心仪商品：${wantProduct ? wantProduct : '暂无'}\n`;
                 if (wantProduct) {
                   console.log(`BoxJs或环境变量提供的心仪商品：${wantProduct}\n`);
-                  await configProductList(data,true);
+                  await jdfactory_getProductList(true);
                   let wantProductSkuId = '', name, totalScore, couponCount, remainScore;
                   for (let item of $.canMakeList) {
                     if (item.name.indexOf(wantProduct) > - 1) {
@@ -218,7 +218,7 @@ async function algorithm() {
                   }
                 } else {
                   console.log(`BoxJs或环境变量暂未提供心仪商品\n如需兑换心仪商品，请提供心仪商品名称\n`);
-                  await configProductList(data,true);
+                  await jdfactory_getProductList(true);
                   if ($.canMakeList) {
                     message += `当前剩余最多商品：${$.canMakeList[0] && $.canMakeList[0].name}\n`;
                     message += `兑换所需电量：${$.canMakeList[0] && $.canMakeList[0].fullScore}\n`;
@@ -535,9 +535,6 @@ function queryVkComponent() {
 function jdfactory_getProductList(flag = false) {
   return new Promise(resolve => {
     $.post(taskPostUrl('jdfactory_getProductList'), async (err, resp, data) => {
-        console.log(`err = ${JSON.stringify(data)}`)
-        console.log(`resp = ${JSON.stringify(data)}`)
-        console.log(`data = ${JSON.stringify(data)}`)
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -545,10 +542,10 @@ function jdfactory_getProductList(flag = false) {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            console.log(`data = ${JSON.stringify(data)}`)
+            // console.log(`data = ${JSON.stringify(data)}`)
             if (data.data.bizCode === 0) {
               $.canMakeList = [];
-              $.canMakeList = data.data.result.skuIdList;//当前可选商品列表 sellOut:1为已抢光，0为目前可选择
+              $.canMakeList = data.data.result.canMakeList;//当前可选商品列表 sellOut:1为已抢光，0为目前可选择
               if ($.canMakeList && $.canMakeList.length > 0) {
                 $.canMakeList.sort(sortCouponCount);
                 console.log(`商品名称       可选状态    剩余量`)
@@ -576,36 +573,6 @@ function jdfactory_getProductList(flag = false) {
       }
     })
   })
-}
-
-function configProductList(data,flag = false) {
-    return new Promise(async resolve => {
-        try {
-            if (data.data.bizCode === 0) {
-                $.canMakeList = [];
-                $.canMakeList = data.data.result.skuIdList;//当前可选商品列表 sellOut:1为已抢光，0为目前可选择
-                if ($.canMakeList && $.canMakeList.length > 0) {
-                    $.canMakeList.sort(sortCouponCount);
-                    console.log(`商品名称       可选状态    剩余量`)
-                    for (let item of $.canMakeList) {
-                        console.log(`${item.name.slice(-4)}         ${item.sellOut === 1 ? '已抢光':'可 选'}      ${item.couponCount}`);
-                    }
-                    if (!flag) {
-                        for (let item of $.canMakeList) {
-                            if (item.name.indexOf(wantProduct) > -1 && item.couponCount > 0 && item.sellOut === 0) {
-                                await jdfactory_makeProduct(item.skuId);
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e){
-            console.log(`异常：${JSON.stringify(data)}`)
-        } finally {
-            resolve();
-        }
-    })
 }
 
 function sortCouponCount(a, b) {
@@ -639,14 +606,14 @@ function jdfactory_getHomeData() {
                 //新用户
                 console.log(`此京东账号${$.index}${$.nickName}为新用户暂未开启${$.name}活动\n现在为您从库存里面现有数量中选择一商品`);
                 if ($.haveProduct === 2) {
-                  await configProductList(data);//选购商品
+                  await jdfactory_getProductList();//选购商品
                 }
                 // $.msg($.name, '暂未开启活动', `京东账号${$.index}${$.nickName}暂未开启${$.name}活动\n请去京东APP->搜索'玩一玩'->东东工厂->开启\n或点击弹窗即可到达${$.name}活动`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
               }
               if ($.newUser !== 1 && $.haveProduct === 2) {
                 console.log(`此京东账号${$.index}${$.nickName}暂未选购商品\n现在也能为您做任务和收集免费电力`);
                 // $.msg($.name, '暂未选购商品', `京东账号${$.index}${$.nickName}暂未选购商品\n请去京东APP->搜索'玩一玩'->东东工厂->选购一件商品\n或点击弹窗即可到达${$.name}活动`, {'open-url': 'openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html%22%20%7D'});
-                // await configProductList(data);//选购商品
+                // await jdfactory_getProductList();//选购商品
               }
             } else {
               console.log(`异常：${JSON.stringify(data)}`)
@@ -737,7 +704,7 @@ function taskPostUrl(function_id, body = {}, function_id2) {
       "origin": "https://h5.m.jd.com",
       "referer": "https://h5.m.jd.com/",
       'Content-Type': 'application/x-www-form-urlencoded',
-      "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      "User-Agent":'jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0',
     }
   }
 }
