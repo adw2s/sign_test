@@ -542,6 +542,9 @@ function queryVkComponent() {
 function jdfactory_getProductList(flag = false) {
   return new Promise(resolve => {
     $.post(taskPostUrl('jdfactory_getProductList'), async (err, resp, data) => {
+        console.log(`err = ${JSON.stringify(data)}`)
+        console.log(`resp = ${JSON.stringify(data)}`)
+        console.log(`data = ${JSON.stringify(data)}`)
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
