@@ -216,6 +216,7 @@ async function algorithm() {
                   }
                 } else {
                   console.log(`BoxJs或环境变量暂未提供心仪商品\n如需兑换心仪商品，请提供心仪商品名称\n`);
+                  console.log(JSON.stringify($.canMakeList))
                   await jdfactory_getProductList(true);
                   message += `当前剩余最多商品：${$.canMakeList[0] && $.canMakeList[0].name}\n`;
                   message += `兑换所需电量：${$.canMakeList[0] && $.canMakeList[0].fullScore}\n`;
